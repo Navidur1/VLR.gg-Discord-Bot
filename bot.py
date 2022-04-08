@@ -1,6 +1,10 @@
 import discord
 import requests
 import json
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def get_call(req):
     response = requests.get('https://vlrggapi.herokuapp.com/news')
@@ -9,7 +13,6 @@ def get_call(req):
 
 client = discord.Client()
 
-discord.utils.oauth_url('OTYxODQxMTI1MjczMDA2MDgw.Yk-2Wg.EpHng1F2RyA2on2uDhEx_G3XTEo')
 
 @client.event
 async def on_ready():
@@ -28,4 +31,4 @@ async def on_message(message):
         msg = get_call('/matches/results')
         await message.channel.send(msg)
 
-client.run('OTYxODQxMTI1MjczMDA2MDgw.Yk-2Wg.EpHng1F2RyA2on2uDhEx_G3XTEo')
+client.run(os.getenv('TOKEN'))
