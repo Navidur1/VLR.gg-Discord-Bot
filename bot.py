@@ -1,18 +1,15 @@
 import discord
-import logging
+import requests
+import json
 
-# For logging to file
-# logger = logging.getLogger('discord')
-# logger.setLevel(logging.DEBUG)
-# handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
-# handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
-# logger.addHandler(handler)
-
-logging.basicConfig()
+def get_call(req):
+    response = requests.get('https://vlrggapi.herokuapp.com/news')
+    json_data = json.loads(response.text)
+    return json_data['data']['segments'][0]['description']
 
 client = discord.Client()
 
-#discord.utils.oauth_url('OTYxODQxMTI1MjczMDA2MDgw.Yk-2Wg.Y8sOYTb7cFdZIhND2GIsVieag-8')
+discord.utils.oauth_url('OTYxODQxMTI1MjczMDA2MDgw.Yk-2Wg.EpHng1F2RyA2on2uDhEx_G3XTEo')
 
 @client.event
 async def on_ready():
@@ -23,7 +20,12 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if message.content == ('$hello'):
-        await message.channel.send('Hello!')
+    if message.content == ('/news'):
+        msg = get_call('/news')
+        await message.channel.send(msg)
 
-client.run('OTYxODQxMTI1MjczMDA2MDgw.Yk-2Wg.Y8sOYTb7cFdZIhND2GIsVieag-8')
+    if message.content == ('/matches/results'):
+        msg = get_call('/matches/results')
+        await message.channel.send(msg)
+
+client.run('OTYxODQxMTI1MjczMDA2MDgw.Yk-2Wg.EpHng1F2RyA2on2uDhEx_G3XTEo')
